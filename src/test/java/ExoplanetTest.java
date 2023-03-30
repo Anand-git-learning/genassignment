@@ -29,7 +29,7 @@ public class ExoplanetTest {
         exoPlanetData.put(planet3);
 
         // Call the method to test
-        int count = ExoPlanetMain.displayNoStarData(exoPlanetData);
+        int count = ExoPlanetMain.showNoStarData(exoPlanetData);
 
         // Assert that the count of orphan planets is correct
         Assert.assertEquals(1, count);
@@ -53,7 +53,7 @@ public class ExoplanetTest {
             exoPlanetData.put(planet3);
 
             // Call the method to test
-            String result = ExoPlanetMain.displayHottestStarData(exoPlanetData);
+            String result = ExoPlanetMain.showHottestStarData(exoPlanetData);
 
             // Assert that the hottest star name returned is "Kepler-438b"
             Assert.assertEquals("Kepler-438b", result);
@@ -85,7 +85,7 @@ public class ExoplanetTest {
         expectedTimelineData.add(0);
         expectedTimelineData.add(0);
 
-        List<Object> actualTimelineData = ExoPlanetMain.displayTimelineData(exoPlanetData);
+        List<Object> actualTimelineData = ExoPlanetMain.showTimelineData(exoPlanetData);
 
         Assert.assertEquals(expectedTimelineData, actualTimelineData);
     }

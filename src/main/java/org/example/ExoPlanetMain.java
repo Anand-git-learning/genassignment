@@ -19,8 +19,8 @@ public class ExoPlanetMain {
         String jsonText = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         JSONArray exoPlanetData = new JSONArray(jsonText);
 
-        int count_orphan_planet = displayNoStarData(exoPlanetData);
-        String hottest_star_planet_id = displayHottestStarData(exoPlanetData);
+        int count_orphan_planet = showNoStarData(exoPlanetData);
+        String hottest_star_planet_id = showHottestStarData(exoPlanetData);
         List<ExoPlanetData> planetDataList = new ArrayList<>();
         for (int i = 0; i < exoPlanetData.length(); i++) {
             JSONObject planetObject = exoPlanetData.getJSONObject(i);
@@ -34,27 +34,26 @@ public class ExoPlanetMain {
 
         System.out.println("The number of orphan planets (no star): " + count_orphan_planet);
         System.out.println("The name (planet identifier) of the planet orbiting the hottest star: " + hottest_star_planet_id);
-        displayTimelineData(planetDataList);
+        showTimelineData(planetDataList);
     }
 
-    public static int displayNoStarData(JSONArray exoPlanetData) throws JSONException {
-        int count_orphan_planet = 0;
+    public static int showNoStarData(JSONArray exoPlanetData) throws JSONException {
+        int orphanPlanetCount = 0;
         if (exoPlanetData != null) {
             for (int i = 0; i < exoPlanetData.length(); i++) {
                 JSONObject obj = exoPlanetData.getJSONObject(i);
                 if (obj.has("TypeFlag") && obj.getInt("TypeFlag") == 3) {
-                    count_orphan_planet++;
+                    orphanPlanetCount++;
                 }
             }
-            // System.out.println("The number of orphan planets (no star): " + count_orphan_planet);
         }
-        return count_orphan_planet;
+        return orphanPlanetCount;
     }
 
-    public static String displayHottestStarData(JSONArray exoPlanetData) throws JSONException {
+    public static String showHottestStarData(JSONArray exoPlanetData) throws JSONException {
         double max_temp = 0;
         double tempInt = 0;
-        String hottest_star_name = "";
+        String hottestStar = "";
 
         for (int i = 0; i < exoPlanetData.length(); i++) {
             JSONObject planet = exoPlanetData.getJSONObject(i);
@@ -65,46 +64,43 @@ public class ExoPlanetMain {
                 }
                 if (tempInt > max_temp) {
                     max_temp = tempInt;
-                    hottest_star_name = planet.getString("PlanetIdentifier");
+                    hottestStar = planet.getString("PlanetIdentifier");
                 }
             }
         }
-        //  System.out.println("The hottest star is " + hottest_star_name + " with a temperature of " + max_temp + " K");
-        return hottest_star_name;
+        return hottestStar;
     }
 
-    public static List<Object> displayTimelineData(List<ExoPlanetData> exoPlanetData) {
+    public static List<Object> showTimelineData(List<ExoPlanetData> exoPlanetData) {
         List<Object> timelineData = new ArrayList<>(); // return the timeline data captured as an ArrayList
 
         if (exoPlanetData != null && exoPlanetData.size() > 0) {
-            // Java Set to create new Set with matching unique filtered objects
             Set<String> unique = new HashSet<>(exoPlanetData.stream()
                     .map(ExoPlanetData::getDiscoveryYear)
                     .filter(discoveryYear -> !discoveryYear.isEmpty())
                     .toList());
 
-            // sort based on the year of discovery year for timeline display
             List<String> sortedUnique = new ArrayList<>(unique);
             sortedUnique.sort(String::compareTo);
 
-            System.out.println("--------------------------TIMELINE Data--------------------------");
+            System.out.println("***********Timeline of the number of planets discovered per year**************");
             for (String year : sortedUnique) {
-                int smallPlanetCount = (int) exoPlanetData.stream()
+                int countOfSmallPlanets = (int) exoPlanetData.stream()
                         .filter(object -> object.getDiscoveryYear().equals(year) && !object.getRadiusJpt().isEmpty() && Double.parseDouble(object.getRadiusJpt()) < 1)
                         .count();
-                int mediumPlanetCount = (int) exoPlanetData.stream()
+                int countOfMediumPlanets = (int) exoPlanetData.stream()
                         .filter(object -> object.getDiscoveryYear().equals(year) && !object.getRadiusJpt().isEmpty() && Double.parseDouble(object.getRadiusJpt()) >= 1 && Double.parseDouble(object.getRadiusJpt()) < 2)
                         .count();
-                int largePlanetCount = (int) exoPlanetData.stream()
+                int countOfLargePlanets = (int) exoPlanetData.stream()
                         .filter(object -> object.getDiscoveryYear().equals(year) && !object.getRadiusJpt().isEmpty() && Double.parseDouble(object.getRadiusJpt()) >= 2)
                         .count();
-                System.out.printf("In %s we discovered %d small planets, %d medium planets and %d large planets%n", year, smallPlanetCount, mediumPlanetCount, largePlanetCount);
+                System.out.printf("In %s we discovered %d small planets, %d medium planets and %d large planets%n", year, countOfSmallPlanets, countOfMediumPlanets, countOfLargePlanets);
                 timelineData.add(year);
-                timelineData.add(smallPlanetCount);
-                timelineData.add(mediumPlanetCount);
-                timelineData.add(largePlanetCount);
+                timelineData.add(countOfSmallPlanets);
+                timelineData.add(countOfMediumPlanets);
+                timelineData.add(countOfLargePlanets);
             }
-            System.out.println("-----------------------------------------------------------------");
+            System.out.println("******************************************************************************");
         }
         return timelineData;
     }
