@@ -9,10 +9,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ExoPlanetMain {
     public static void main(String[] args) throws Exception {
@@ -55,15 +52,15 @@ public class ExoPlanetMain {
     }
 
     public static String displayHottestStarData(JSONArray exoPlanetData) throws JSONException {
-        Double max_temp = (double) 0;
-        Double tempInt = (double) 0;
+        double max_temp = (double) 0;
+        double tempInt = (double) 0;
         String hottest_star_name = "";
 
         for (int i = 0; i < exoPlanetData.length(); i++) {
             JSONObject planet = exoPlanetData.getJSONObject(i);
             if (planet.has("HostStarTempK")) {
                 String temp = planet.getString("HostStarTempK");
-                if (temp != "") {
+                if (!Objects.equals(temp, "")) {
                     tempInt = Double.parseDouble(temp);
                 }
                 if (tempInt > max_temp) {
@@ -72,11 +69,7 @@ public class ExoPlanetMain {
                 }
             }
         }
-        if (hottest_star_name != "") {
-            //  System.out.println("The hottest star is " + hottest_star_name + " with a temperature of " + max_temp + " K");
-        } else {
-            System.out.println("No star temperature data found");
-        }
+        //  System.out.println("The hottest star is " + hottest_star_name + " with a temperature of " + max_temp + " K");
         return hottest_star_name;
     }
 
@@ -86,8 +79,8 @@ public class ExoPlanetMain {
         if (exoPlanetData != null && exoPlanetData.size() > 0) {
             // Java Set to create new Set with matching unique filtered objects
             Set<String> unique = new HashSet<>(exoPlanetData.stream()
-                    .filter(val -> !val.getDiscoveryYear().isEmpty())
                     .map(ExoPlanetData::getDiscoveryYear)
+                    .filter(discoveryYear -> !discoveryYear.isEmpty())
                     .toList());
 
             // sort based on the year of discovery year for timeline display
