@@ -1,3 +1,5 @@
+package org.example;
+
 import org.example.bean.ExoPlanetData;
 import org.example.ExoPlanetMain;
 import org.json.JSONArray;
