@@ -52,8 +52,8 @@ public class ExoPlanetMain {
     }
 
     public static String displayHottestStarData(JSONArray exoPlanetData) throws JSONException {
-        double max_temp = (double) 0;
-        double tempInt = (double) 0;
+        double max_temp = 0;
+        double tempInt = 0;
         String hottest_star_name = "";
 
         for (int i = 0; i < exoPlanetData.length(); i++) {
